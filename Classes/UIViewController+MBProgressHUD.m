@@ -195,14 +195,25 @@ static const int forbid;
     SEL sel = @selector(hideErrorProgressHUD);
     if (hideErrorProgressHUD) [self hideMBProgressAllText];
     objc_setAssociatedObject(self, sel, @(show), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    
+    dispatch_queue_t queue = dispatch_get_main_queue();
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), queue , ^{
         objc_setAssociatedObject(self, sel, @(NO), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     });
 }
 - (BOOL)hideErrorProgressHUD {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
++ (void)load {
+    Method method1 = class_getInstanceMethod(self, NSSelectorFromString(@"dealloc"));
+    Method method2 = class_getInstanceMethod(self, @selector(mb_dealloc));
+    method_exchangeImplementations(method1, method2);
 }
+- (void)mb_dealloc {
+    @try {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:HidenAll object:nil];
+    } @catch (NSException *exception) {} @finally {}
+    [self mb_dealloc];
+}
+
 @end
