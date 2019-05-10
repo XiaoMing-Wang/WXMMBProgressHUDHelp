@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
 
   s.homepage     = "https://github.com/XiaoMing-Wang/WXMMBProgressHUDHelp" 
   s.source       = { :git => "https://github.com/XiaoMing-Wang/WXMMBProgressHUDHelp.git", :tag => "#{s.version}" }
-  s.source_files = "WXMMBProgressHUDHelp/Classes/**/*"
+  s.source_files = "Classes/**/*"
   s.requires_arc = true 
   s.platform     = :ios, "9.0" 
   # s.frameworks   = "UIKit", "Foundation" 
