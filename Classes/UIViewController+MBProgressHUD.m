@@ -4,16 +4,17 @@
 //  Created by edz on 2019/4/28.
 //  Copyright © 2019年 wq. All rights reserved.
 //
-#define HidenAll @"WXM_HIDENALL"
-#define KWidth [UIScreen mainScreen].bounds.size.width
-#define Indeterminate_Tag 10000
-#define HUDModeText 10001
-#define HUDDelay 3.5f
-#define Label_Font 15.5
+#define MB_HidenAll @"MB_HIDENALL"
+#define MB_SWidth [UIScreen mainScreen].bounds.size.width
+#define MB_Indeterminate 10000
+#define MB_HudModeTex 10001
+#define MB_HudDelay 3.5f
+#define MB_LabelFont 15.5
+
 #import <objc/runtime.h>
 #import "UIViewController+MBProgressHUD.h"
 #import "MBProgressHUD.h"
-#import "WQGestureLockToast.h"
+#import "WXMProgressHUDToast.h"
 
 @implementation UIViewController (MBProgressHUD)
 
@@ -23,32 +24,34 @@
     if (self.navigationController) [self.navigationController hideMBProgressText];
     MBProgressHUD * interactionHUD = [self creatIndeterminateHudWithView:self.view];
     interactionHUD.userInteractionEnabled = NO;
-    interactionHUD.tag = Indeterminate_Tag;
+    interactionHUD.tag = MB_Indeterminate;
 }
+
 - (void)showLoadingImage_noInf {
     [self hideMBProgressText];
     if (self.navigationController) [self.navigationController hideMBProgressText];
     MBProgressHUD * interactionHUD = [self creatIndeterminateHudWithView:self.view];
     interactionHUD.userInteractionEnabled = YES;
-    interactionHUD.tag = Indeterminate_Tag;
+    interactionHUD.tag = MB_Indeterminate;
 }
+
 - (void)showLoadingImageFull {
     [self hideMBProgressText];
     if (self.navigationController) [self.navigationController hideMBProgressText];
     MBProgressHUD * interactionHUD = [self creatIndeterminateHudWithView:self.view];
-    UIColor * color = [UIColor colorWithRed:(235)/255.0f green:(235)/255.0f blue:(235)/255.0f alpha:1];
-    interactionHUD.backgroundColor = color;
+    interactionHUD.backgroundColor = [UIColor whiteColor];
     interactionHUD.userInteractionEnabled = YES;
-    interactionHUD.tag = Indeterminate_Tag;
+    interactionHUD.tag = MB_Indeterminate;
 }
 
 /** 隐藏 */
 - (void)hideLoadingImage {
     NSArray * hudArray = [MBProgressHUD allHUDsForView:self.view];
     [hudArray enumerateObjectsUsingBlock:^(MBProgressHUD *obj, NSUInteger idx, BOOL *stop) {
-        if (obj.tag == Indeterminate_Tag) [obj hide:NO];
+        if (obj.tag == MB_Indeterminate) [obj hide:NO];
     }];
 }
+
 /** 显示在导航控制器上  */
 - (void)showMBProgressMessage:(NSString *)message {
     if (self.hideErrorProgressHUD) return;
@@ -56,42 +59,47 @@
     if (self.navigationController) [self.navigationController hideLoadingImage];
     UIView * supView = self.navigationController ? self.navigationController.view : self.view;
     MBProgressHUD * hud = [self creatModeTextHudWithView:supView message:message];
-    hud.tag = HUDModeText;
+    hud.tag = MB_HudModeTex;
     [self addNotificationCenter];
 }
+
 /** 显示在当前控制器  */
 - (void)showMBProgressMessageSelfVC:(NSString *)message {
     if (self.hideErrorProgressHUD) return;
     [self hideLoadingImage];
     MBProgressHUD * hud = [self creatModeTextHudWithView:self.view message:message];
-    [hud hide:NO afterDelay:HUDDelay];
-    hud.tag = HUDModeText;
+    [hud hide:NO afterDelay:MB_HudDelay];
+    hud.tag = MB_HudModeTex;
     [self addNotificationCenter];
 }
+
 /** 隐藏文字  */
 - (void)hideMBProgressText {
     NSArray * hudArray = [MBProgressHUD allHUDsForView:self.view];
     NSArray * hudArrayNavigation = [MBProgressHUD allHUDsForView:self.navigationController.view];
     [hudArray enumerateObjectsUsingBlock:^(MBProgressHUD *obj, NSUInteger idx, BOOL *stop) {
-        if (obj.tag == HUDModeText) [obj hide:NO];
+        if (obj.tag == MB_HudModeTex) [obj hide:NO];
     }];
-    [hudArrayNavigation enumerateObjectsUsingBlock:^(MBProgressHUD *obj, NSUInteger idx, BOOL *stop) {
-        if (obj.tag == HUDModeText) [obj hide:NO];
+    [hudArrayNavigation enumerateObjectsUsingBlock:^(MBProgressHUD *obj, NSUInteger idx, BOOL*stop) {
+        if (obj.tag == MB_HudModeTex) [obj hide:NO];
     }];
 }
+
 /** 添加通知 */
 - (void)addNotificationCenter {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:HidenAll object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MB_HidenAll object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideMBProgressText)
-                                                 name:HidenAll object:nil];
+                                                 name:MB_HidenAll object:nil];
 }
+
 /** 隐藏所有  */
 - (void)hideMBProgressAllText {
-    [[NSNotificationCenter defaultCenter] postNotificationName:HidenAll object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MB_HidenAll object:nil];
 }
+
 /** 显示成功 */
 - (void)showSuccessHud:(NSString *)msg {
-    [self showSuccessHud:msg afterDelay:3.0f];
+    [self showSuccessHud:msg afterDelay:MB_HudDelay];
 }
 - (void)showSuccessHud:(NSString *)msg afterDelay:(NSTimeInterval)delay {
     UIView * supView = self.view;
@@ -102,8 +110,9 @@
         [self.navigationController hideLoadingImage];
         [self.navigationController hideMBProgressText];
     }
-    [WQGestureLockToast showHUD:msg inView:supView afterDelay:delay];
+    [WXMProgressHUDToast progressHUDToast:msg supView:supView afterDelay:delay];
 }
+
 /** 显示hud并且关闭手势  */
 static const int forbid;
 - (void)showLoadingForbid {
@@ -114,6 +123,7 @@ static const int forbid;
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
 }
+
 - (void)hideLoadingForbid {
     [self hideLoadingImage];
     if (self.navigationController){
@@ -121,12 +131,13 @@ static const int forbid;
         self.navigationController.interactivePopGestureRecognizer.enabled = inte;
     }
 }
+
 /** 转圈 */
 - (MBProgressHUD *)creatIndeterminateHudWithView:(UIView *)superView {
-    NSArray * hudArray =[MBProgressHUD allHUDsForView:superView];
+    NSArray *hudArray = [MBProgressHUD allHUDsForView:superView];
     MBProgressHUD *hud = nil;
     if (hudArray.count > 0) hud = hudArray.lastObject;
-    else hud = [MBProgressHUD showHUDAddedTo:superView animated:NO];
+    else hud = [MBProgressHUD showHUDAddedTo:superView animated:YES];;
     hud.mode = MBProgressHUDModeIndeterminate;
     hud.animationType = MBProgressHUDAnimationZoom;
     hud.userInteractionEnabled = NO;
@@ -135,6 +146,7 @@ static const int forbid;
     hud.dimBackground = NO;
     return hud;
 }
+
 /** text */
 - (MBProgressHUD *)creatModeTextHudWithView:(UIView *)superView message:(NSString *)message {
     NSArray *hudArray = [MBProgressHUD allHUDsForView:superView];
@@ -150,26 +162,27 @@ static const int forbid;
     
     /** 取消之前的隐藏动画 重新计时 */
     [NSObject cancelPreviousPerformRequestsWithTarget:hud selector:@selector(hide:) object:nil];
-    [hud performSelector:@selector(hide:) withObject:nil afterDelay:HUDDelay];
+    [hud performSelector:@selector(hide:) withObject:nil afterDelay:MB_HudDelay];
     
     BOOL haveSpace = [message rangeOfString:@"\n"].location != NSNotFound;
-    CGFloat width = [self getSizeWithString:message font:Label_Font width:KWidth].width;
+    CGFloat width = [self getSizeWithString:message font:MB_LabelFont width:MB_SWidth].width;
     
-    if ((width <= (KWidth - 100)) && !haveSpace) {
+    if ((width <= (MB_SWidth - 100)) && !haveSpace) {
         hud.mode = MBProgressHUDModeText;
         hud.minSize = CGSizeMake(140, 46.5);
         hud.labelText = message;
-        hud.detailsLabelFont = [UIFont systemFontOfSize:Label_Font];
+        hud.detailsLabelFont = [UIFont systemFontOfSize:MB_LabelFont];
         hud.detailsLabelColor = [UIColor whiteColor];
         hud.labelColor = [UIColor whiteColor];
-        hud.labelFont = [UIFont systemFontOfSize:Label_Font];
+        hud.labelFont = [UIFont systemFontOfSize:MB_LabelFont];
     } else {
-        CGFloat height = [self getSizeWithString:message font:Label_Font width:(KWidth - 100)].height;
-        UIView *customView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, KWidth - 100, height)];
-        UILabel *customLabel = [[UILabel alloc] initWithFrame:CGRectMake(7, 0, (KWidth - 100), height)];
+        CGFloat ws = (MB_SWidth - 100);
+        CGFloat height = [self getSizeWithString:message font:MB_LabelFont width:ws].height;
+        UIView *customView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ws, height)];
+        UILabel *customLabel = [[UILabel alloc] initWithFrame:CGRectMake(7, 0, ws, height)];
         [customView addSubview:customLabel];
         customLabel.text = message;
-        customLabel.font = [UIFont systemFontOfSize:Label_Font];
+        customLabel.font = [UIFont systemFontOfSize:MB_LabelFont];
         customLabel.textColor = [UIColor whiteColor];
         customLabel.numberOfLines = 0;
         hud.customView = customView;
@@ -211,9 +224,8 @@ static const int forbid;
 }
 - (void)mb_dealloc {
     @try {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:HidenAll object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:MB_HidenAll object:nil];
     } @catch (NSException *exception) {} @finally {}
     [self mb_dealloc];
 }
-
 @end

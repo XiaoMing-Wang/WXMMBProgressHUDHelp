@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface WQGestureLockToast : NSObject
+@interface WXMProgressHUDToast : NSObject
 
 /** 成功hud  */
-+ (void)showHUD:(NSString *)msg inView:(UIView *)sView afterDelay:(NSTimeInterval)delay;
++ (void)progressHUDToast:(NSString *)msg supView:(UIView *)sView afterDelay:(NSTimeInterval)delay;
 
 @end

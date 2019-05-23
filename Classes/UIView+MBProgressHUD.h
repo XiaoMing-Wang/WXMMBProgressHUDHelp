@@ -6,7 +6,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WQGestureLockToast.h"
 
 @interface UIView (MBProgressHUD)
 
@@ -17,9 +16,9 @@
 
 - (void)showMBProgressMessage:(NSString *)message;       /** 显示文字在导航控制器上  */
 - (void)showMBProgressMessageSelfVC:(NSString *)message; /** 显示文字在当前控制器  */
-- (void)hideMBProgressText;                              /** 隐藏文  */
+- (void)hideMBProgressText;                              /** 隐藏文字  */
 
 /** 成功图标 */
-- (void)showSuccessHud:(NSString *)msg;
+- (void)showSuccessHud:(NSString *)msg; /* 默认3.5秒消失 */
 - (void)showSuccessHud:(NSString *)msg afterDelay:(NSTimeInterval)delay;
 @end
