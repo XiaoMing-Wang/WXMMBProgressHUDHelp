@@ -214,14 +214,17 @@ static const int forbid;
         objc_setAssociatedObject(self, sel, @(NO), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     });
 }
+
 - (BOOL)hideErrorProgressHUD {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
+
 + (void)load {
     Method method1 = class_getInstanceMethod(self, NSSelectorFromString(@"dealloc"));
     Method method2 = class_getInstanceMethod(self, @selector(mb_dealloc));
     method_exchangeImplementations(method1, method2);
 }
+
 - (void)mb_dealloc {
     @try {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:MB_HidenAll object:nil];

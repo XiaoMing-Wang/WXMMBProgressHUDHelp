@@ -12,6 +12,6 @@
 #import "MBProgressHUD.h"
 #import "UIView+MBProgressHUD.h"
 #import "UIViewController+MBProgressHUD.h"
-#import "WQGestureLockToast.h"
+#import "WXMProgressHUDToast.h"
 
 #endif /* WXMMBProgressHUDHeader_h */
