@@ -22,12 +22,14 @@
     interactionHUD.userInteractionEnabled = NO;
     interactionHUD.tag = MB_Indeterminate;
 }
+
 - (void)showLoadingImage_noInf {
     [self hideMBProgressText];
     MBProgressHUD * interactionHUD = [self creatIndeterminateHudWithView:self];
     interactionHUD.userInteractionEnabled = YES;
     interactionHUD.tag = MB_Indeterminate;
 }
+
 - (void)showLoadingImageFull {
     [self hideMBProgressText];
     MBProgressHUD * interactionHUD = [self creatIndeterminateHudWithView:self];
@@ -44,18 +46,21 @@
         if (obj.tag == MB_Indeterminate) [obj hide:NO];
     }];
 }
+
 /** 显示在导航控制器上  */
 - (void)showMBProgressMessage:(NSString *)message {
     [self hideLoadingImage];
     MBProgressHUD * hud = [self creatModeTextHudWithView:self message:message];
     hud.tag = MB_HudModeTex;
 }
+
 /** 显示在当前控制器  */
 - (void)showMBProgressMessageSelfVC:(NSString *)message {
     MBProgressHUD * hud = [self creatModeTextHudWithView:self message:message];
     [hud hide:NO afterDelay:MB_HudDelay];
     hud.tag = MB_HudModeTex;
 }
+
 /** 隐藏文字  */
 - (void)hideMBProgressText {
     NSArray * hudArray = [MBProgressHUD allHUDsForView:self];
@@ -63,6 +68,7 @@
         if (obj.tag == MB_HudModeTex) [obj hide:NO];
     }];
 }
+
 /** 转圈 */
 - (MBProgressHUD *)creatIndeterminateHudWithView:(UIView *)superView {
     NSArray * hudArray =[MBProgressHUD allHUDsForView:superView];
@@ -77,6 +83,7 @@
     hud.dimBackground = NO;
     return hud;
 }
+
 /** text */
 - (MBProgressHUD *)creatModeTextHudWithView:(UIView *)superView message:(NSString *)message {
     NSArray *hudArray = [MBProgressHUD allHUDsForView:superView];
@@ -124,11 +131,13 @@
 - (void)showSuccessHud:(NSString *)msg {
     [self showSuccessHud:msg afterDelay:MB_HudDelay];
 }
+
 - (void)showSuccessHud:(NSString *)msg afterDelay:(NSTimeInterval)delay {
     [self hideLoadingImage];
     [self hideMBProgressText];
     [WXMProgressHUDToast progressHUDToast:msg supView:self afterDelay:delay];
 }
+
 /** 根据高度度求 width */
 - (CGSize)getSizeWithString:(NSString *)string font:(CGFloat)font width:(CGFloat) width {
     if (!font) font = [UIFont systemFontSize];
